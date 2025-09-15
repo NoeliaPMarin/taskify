@@ -1,0 +1,26 @@
+@import '@fontsource/inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+.h1 {
+  @apply font-bold text-5xl leading-[40px];
+}
+
+.h2 {
+  @apply font-semibold text-[32px] leading-10;
+}
+
+.h3 {
+  @apply font-semibold text-2xl leading-8;
+}
+
+.caption {
+  @apply font-medium text-2xl leading-8;
+}
+
+.body {
+  @apply font-normal text-lg leading-7;
+}
