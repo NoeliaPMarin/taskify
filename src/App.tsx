@@ -6,6 +6,7 @@ import Feattures from "./components/Feattures";
 import CallAction from "./components/CallAction";
 import Footer from "./components/Footer";
 import Login from "./pages/LogIn";
+import SignUp from "./pages/SignUp";
 
 export default function App() {
   return (
@@ -28,6 +29,14 @@ export default function App() {
           // Login Page
           <>
           <Login />
+          <Footer />
+          </>
+        }
+        />
+        <Route path="/signup" element={
+          // Sign Up Page
+          <>
+          <SignUp />
           <Footer />
           </>
         }

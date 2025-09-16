@@ -10,11 +10,14 @@ export default function Navbar() {
     <nav className="h-20 bg-tertiary shadow-primaryShadow px-6 flex items-center justify-between">
       {/* Logo */}
       <div className="flex items-center gap-12 ml-[112px] ">
-        <img
-          src="/images/logo.svg"
-          alt="Taskify Logo"
-          className="h-12 w-40 m-4"
-        />
+        <Link
+          to="/">
+          <img
+            src="/images/logo.svg"
+            alt="Taskify Logo"
+            className="h-12 w-40 m-4"
+          />
+        </Link>
 
         {/* Menu links (desktop) */}
         <ul className="hidden md:flex gap-10 text-primaryText font-semibold text-[18px] leading-[20px]">
@@ -32,7 +35,9 @@ export default function Navbar() {
         >
           Log In
         </Link>
-        <Button variant="secondary">Sign Up</Button>
+        <Link to="/signup">
+          <Button variant="secondary">Sign Up</Button>
+        </Link>
       </div>
 
       {/* Burguer menu (mobile) */}

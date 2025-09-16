@@ -1,13 +1,18 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
     return (
         <div className="bg-primary">
             <div className="px-6 flex items-center justify-between">
                 <div className="ml-[190px]">
-                    <img
-                        src="/images/logoWhite.svg"
-                        alt="Taskify Logo"
-                        className="h-12 w-40 m-4"
-                    />
+                    <Link
+                        to="/">
+                        <img
+                            src="/images/logoWhite.svg"
+                            alt="Taskify Logo"
+                            className="h-12 w-40 m-4"
+                        />
+                    </Link>
                 </div>
                 <ul className="hidden md:flex gap-10 mr-[190px] text-background font-semibold text-[18px] leading-[20px]">
                     <li><a href="#features" className="hover:text-primary">Features</a></li>
