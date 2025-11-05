@@ -7,12 +7,12 @@ export default function LoginForm() {
             <input
                 type="email"
                 placeholder="Email"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] border-secondaryBackground rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <input
                 type="password"
                 placeholder="Password"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] border-secondaryBackground rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Link
                 to="/forgot-password"

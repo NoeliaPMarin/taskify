@@ -7,6 +7,7 @@ import CallAction from "./components/CallAction";
 import Footer from "./components/Footer";
 import Login from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
           </>
         }
         />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
