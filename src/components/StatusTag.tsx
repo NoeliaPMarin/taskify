@@ -17,7 +17,7 @@ export default function StatusTag({ status }: StatusTagProps) {
 
   return (
     <span
-      className={`px-3 py-1 rounded-full text-sm font-medium ${styles[status]}`}
+      className={`px-2 sm:px-3 py-1 rounded-full text-sm sm:text-base font-medium whitespace-nowrap ${styles[status]}`}
     >
       {labels[status]}
     </span>

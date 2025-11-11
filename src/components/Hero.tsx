@@ -1,9 +1,11 @@
 import Button from "./Button";
+import { Link } from "react-router-dom";
+
 
 export default function Hero() {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between px-6 sm:px-12 lg:px-[112px] py-12 bg-[url('/images/heroBg.png')] bg-cover bg-center">
-      
+
       {/* Left Content */}
       <div className="flex flex-col justify-center max-w-[655px] text-center md:text-left mb-10 md:mb-0">
         <h1 className="h1 mb-6 text-primaryText">
@@ -16,7 +18,7 @@ export default function Hero() {
 
         {/* CTA Button - visible in all screen sizes */}
         <div className="flex justify-center md:justify-start">
-          <Button variant="primary">Sign Up</Button>
+          <Link to="/signup"><Button variant="primary" className="w-full">Sign Up</Button></Link>
         </div>
       </div>
 

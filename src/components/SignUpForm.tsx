@@ -1,50 +1,53 @@
 import Button from "./Button";
 import { Link } from "react-router-dom";
 
-export default function LoginForm() {
+export default function SignUpForm() {
     return (
-        <form className="w-[507px] flex flex-col gap-4">
+        <form className="w-full max-w-md mx-auto flex flex-col gap-4 px-4 sm:px-0">
             <label htmlFor="text" className="mb-2 font-medium text-primaryText">
                 Full name
             </label>
             <input
                 type="text"
                 placeholder="Your name"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
+
             <label htmlFor="email" className="mb-2 font-medium text-primaryText">
                 Email
             </label>
             <input
                 type="email"
                 placeholder="Your email"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
+
             <label htmlFor="password" className="mb-2 font-medium text-primaryText">
                 Password
             </label>
             <input
                 type="password"
                 placeholder="Password"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
-            <label htmlFor="password" className="mb-2 font-medium text-primaryText">
+
+            <label htmlFor="confirmPassword" className="mb-2 font-medium text-primaryText">
                 Confirm Password
             </label>
             <input
-                type="confirmPassword"
+                type="password"
                 placeholder="Confirm Password"
-                className="border h-[78px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border h-[78px] w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
-            <div className="flex justify-end">
-                <div className="flex items-center gap-2">
+            <div className="flex justify-start">
+                <div className="flex items-start gap-2">
                     <input
                         type="checkbox"
                         id="agree"
-                        className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-2 focus:ring-primary"
+                        className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-2 focus:ring-primary mt-1"
                     />
-                    <label htmlFor="agree" className="body text-right">
+                    <label htmlFor="agree" className="body text-left">
                         I agree to the{" "}
                         <Link
                             to="/terms"
@@ -63,8 +66,8 @@ export default function LoginForm() {
                 </div>
             </div>
 
-            <div className="mb-6 mt-7">
-                <Button size="lg" variant="primary">
+            <div className="mt-6 mb-4 w-full">
+                <Button className="w-full" variant="primary">
                     Sign Up
                 </Button>
             </div>
@@ -76,7 +79,7 @@ export default function LoginForm() {
                     className="underline text-accent hover:text-accent/80"
                 >
                     Log In
-                </Link>{" "}
+                </Link>
             </p>
         </form>
     );

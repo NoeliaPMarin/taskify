@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-primary">
       <div className="px-6 py-8 flex flex-col items-center md:flex-row md:justify-between md:px-[112px]">
-        
+
         {/* Logo */}
         <Link to="/">
           <img
@@ -16,9 +16,9 @@ export default function Footer() {
 
         {/* Links */}
         <ul className="flex flex-col items-center gap-4 text-background font-semibold text-[18px] md:flex-row md:gap-10">
-          <li><a href="#features" className="hover:text-accent transition">Features</a></li>
-          <li><a href="#pricing" className="hover:text-accent transition">Pricing</a></li>
-          <li><a href="#contact" className="hover:text-accent transition">Contact</a></li>
+          <li><Link to={"/features"}>Features</Link></li>
+          <li><Link to="/pricing">Pricing</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
       </div>
 

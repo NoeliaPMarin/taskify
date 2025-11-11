@@ -23,9 +23,9 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick }: NavbarPro
 
         {!isLoggedIn ? (
           <ul className="hidden min-[1180px]:flex gap-10 text-primaryText font-semibold text-[18px] leading-[20px]">
-            <li><a href="#features" className="hover:text-primary">Features</a></li>
-            <li><a href="#pricing" className="hover:text-primary">Pricing</a></li>
-            <li><a href="#contact" className="hover:text-primary">Contact</a></li>
+            <li><Link to={"/features"}>Features</Link></li>
+            <li><Link to="/pricing">Pricing</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         ) : (
           <Link
@@ -67,9 +67,9 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick }: NavbarPro
         <div className="absolute top-20 left-0 w-full bg-tertiary shadow-lg p-6 flex flex-col gap-4 min-[1180px]:hidden z-50">
           {!isLoggedIn ? (
             <>
-              <a href="#features" className="text-primaryText">Features</a>
-              <a href="#pricing" className="text-primaryText">Pricing</a>
-              <a href="#contact" className="text-primaryText">Contact</a>
+              <Link to="/features">Features</Link>
+              <Link to="/pricing">Pricing</Link>
+              <Link to="/contact">Contact</Link>
               <Link to="/login"><Button variant="primary" className="w-full">Log In</Button></Link>
               <Link to="/signup"><Button variant="secondary" className="w-full">Sign Up</Button></Link>
             </>
