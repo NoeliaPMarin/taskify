@@ -6,6 +6,7 @@ interface ButtonProps {
   size?: "sm" | "md" | "lg";
   onClick?: () => void;
   className?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   size = "md",
   onClick,
   className = "",
+  type = "button", // Default type is "button"
 }: ButtonProps) {
   const baseStyles =
     "px-8 py-4 rounded-lg font-inter font-semibold text-[18px] leading-[20px] transition-colors shadow-[0_4px_4px_0_rgba(79,70,229,0.2)]";
@@ -35,6 +37,7 @@ export default function Button({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
     >

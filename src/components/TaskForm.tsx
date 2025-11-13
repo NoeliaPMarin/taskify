@@ -8,6 +8,37 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
   const [status, setStatus] = useState("In Progress");
   const [dueDate, setDueDate] = useState("");
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  // Validación de campos obligatorios
+  if (!title.trim() || !list.trim() || !dueDate.trim()) {
+    alert("Please fill in Title, Task List, and Due Date.");
+    return;
+  }
+
+  const newTask = { title, list, description, status, dueDate };
+
+  try {
+    const res = await fetch("http://localhost:4000/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTask),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      console.error("Error creating task:", errData);
+      return;
+    }
+
+    if (onCreate) onCreate();
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+};
+
+
   return (
     <>
 
@@ -16,7 +47,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
         New Task
       </h1>
 
-      <form className="w-full max-w-md flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-4">
         {/* Task Title */}
         <label htmlFor="title" className="mb-2 font-medium text-primaryText">
           Task Title
@@ -26,6 +57,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
           className="border h-[50px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary w-full"
         />
 
@@ -38,6 +70,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
           type="text"
           value={list}
           onChange={(e) => setList(e.target.value)}
+          required
           className="border h-[50px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary w-full"
         />
 
@@ -78,6 +111,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
+          required
           className="border h-[50px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary w-full"
         />
 
@@ -86,7 +120,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
           <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={onCreate}>
+          <Button variant="primary" type="submit">
             Create
           </Button>
         </div>

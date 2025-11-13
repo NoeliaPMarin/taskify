@@ -9,6 +9,9 @@ export default function Dashboard() {
   const [isLoggedIn] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [tasks, setTasks] = useState<
+    { id: number; title: string; status: string; dueDate: string; category: string }[]
+  >([]);
 
   useEffect(() => {
     document.body.style.overflow = isFormOpen ? "hidden" : "";
@@ -17,14 +20,29 @@ export default function Dashboard() {
     };
   }, [isFormOpen]);
 
-  const tasks = [
-    { id: 1, title: "Design new homepage", status: "In Progress", dueDate: "Apr 25, 2024", category: "Work" },
-    { id: 2, title: "Write blog post", status: "Complete", dueDate: "Apr 20, 2024", category: "Personal" },
-    { id: 3, title: "Update project documentation", status: "Not started", dueDate: "Apr 15, 2024", category: "Work" },
-  ];
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch("http://localhost:4000/tasks");
+      if (!res.ok) throw new Error("Error fetching tasks");
+      const data = await res.json();
+      setTasks(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
 
   const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
+
+  const handleTaskCreated = async () => {
+    await fetchTasks();
+    closeForm();
+  };
 
   return (
     <>
@@ -44,11 +62,11 @@ export default function Dashboard() {
       {isFormOpen && (
         <div
           className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 sm:px-6"
-          onClick={closeForm} // Cerrar al hacer clic en el overlay
+          onClick={closeForm}
         >
           <div
             className="bg-white rounded-xl shadow-lg relative w-full max-w-md sm:max-w-lg max-h-[90vh] mx-auto p-0 overflow-hidden"
-            onClick={(e) => e.stopPropagation()} // Evita cerrar al clicar dentro del modal
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="overflow-y-auto max-h-[90vh] p-6">
               <button
@@ -59,7 +77,7 @@ export default function Dashboard() {
               </button>
               <TaskForm
                 onCancel={closeForm}
-                onCreate={() => closeForm()}
+                onCreate={handleTaskCreated}
               />
             </div>
           </div>
