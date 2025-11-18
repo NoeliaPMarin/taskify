@@ -36,6 +36,48 @@ app.post("/tasks", (req, res) => {
     });
 });
 
+// Update a task
+app.put("/tasks/:id", (req, res) => {
+  const taskId = Number(req.params.id);
+  const updatedTask = req.body;
+
+  fs.readFile("./data/tasks.json", "utf-8", (err, data) => {
+    if (err) return res.status(500).json({ error: "Error reading tasks file" });
+
+    let tasks = JSON.parse(data);
+    const index = tasks.findIndex((t) => t.id === taskId);
+
+    if (index === -1) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    tasks[index] = { ...tasks[index], ...updatedTask };
+
+    fs.writeFile("./data/tasks.json", JSON.stringify(tasks, null, 2), (err) => {
+      if (err) return res.status(500).json({ error: "Error writing tasks" });
+      res.json(tasks[index]);
+    });
+  });
+});
+
+
+// Delete a task
+app.delete("/tasks/:id", (req, res) => {
+    const taskId = Number(req.params.id);
+
+    fs.readFile("./data/tasks.json", "utf-8", (err, data) => {
+        if (err) return res.status(500).json({ error: "Error reading tasks file" });
+
+        const tasks = JSON.parse(data);
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+
+        fs.writeFile("./data/tasks.json", JSON.stringify(updatedTasks, null, 2), (err) => {
+            if (err) return res.status(500).json({ error: "Error writing tasks file" });
+            res.status(200).json({ message: "Task deleted", id: taskId });
+        });
+    });
+});
+
 
 // Initialize server
 app.listen(PORT, () => {
