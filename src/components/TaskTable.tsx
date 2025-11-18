@@ -1,20 +1,25 @@
 import React from "react";
 import TaskRow from "./TaskRow";
 
-interface TaskTableProps {
-  tasks: {
-    id: number;
-    title: string;
-    status: string;
-    dueDate: string;
-    category: string;
-  }[];
-  filter: string;
+interface Task {
+  id: number;
+  title: string;
+  list: string;
+  description?: string;
+  status: string;
+  dueDate: string;
 }
 
-export default function TaskTable({ tasks, filter }: TaskTableProps) {
-  const filteredTasks =
-    filter === "All" ? tasks : tasks.filter((t) => t.category === filter);
+interface TaskTableProps {
+  tasks: Task[];
+  filter: string;
+  onDelete: (id: number) => void;
+  // Accept full Task for edit so parent can open edit form with complete data
+  onEdit: (task: Task) => void;
+}
+
+export default function TaskTable({ tasks, filter, onDelete, onEdit }: TaskTableProps) {
+  const filteredTasks = filter === "All" ? tasks : tasks.filter(task => task.list === filter);
 
   return (
     <>
@@ -30,7 +35,7 @@ export default function TaskTable({ tasks, filter }: TaskTableProps) {
         </thead>
         <tbody>
           {filteredTasks.map((task) => (
-            <TaskRow key={task.id} task={task} />
+            <TaskRow key={task.id} task={task} onDelete={onDelete} onEdit={onEdit} />
           ))}
         </tbody>
       </table>
@@ -38,7 +43,7 @@ export default function TaskTable({ tasks, filter }: TaskTableProps) {
       {/* Mobile cards */}
       <div className="sm:hidden">
         {filteredTasks.map((task) => (
-          <TaskRow key={task.id} task={task} />
+          <TaskRow key={task.id} task={task} onDelete={onDelete} onEdit={onEdit} />
         ))}
       </div>
     </>

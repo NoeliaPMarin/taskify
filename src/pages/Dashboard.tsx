@@ -6,12 +6,15 @@ import TaskTable from "../components/TaskTable";
 import TaskForm from "../components/TaskForm";
 
 export default function Dashboard() {
+  type Task = { id: number; title: string; list: string; description?: string; status: string; dueDate: string };
+
   const [isLoggedIn] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [tasks, setTasks] = useState<
-    { id: number; title: string; status: string; dueDate: string; category: string }[]
-  >([]);
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const [taskToEdit, setTaskToEdit] = useState<Task | undefined>(undefined);
 
   useEffect(() => {
     document.body.style.overflow = isFormOpen ? "hidden" : "";
@@ -31,18 +34,46 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const openEditForm = (task: Task) => {
+    setTaskToEdit(task);
+    setIsFormOpen(true);
+  };
 
+  const handleTaskUpdated = async () => {
+    await fetchTasks();
+    setTaskToEdit(undefined);
+    closeForm();
+  };
+
+  const deleteTask = async (id: number) => {
+    try {
+      const res = await fetch(`http://localhost:4000/tasks/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) return console.error("Error deleting task");
+      fetchTasks();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const openForm = () => setIsFormOpen(true);
-  const closeForm = () => setIsFormOpen(false);
+  const closeForm = () => {
+    setIsFormOpen(false);
+    setTaskToEdit(undefined);
+  };
 
   const handleTaskCreated = async () => {
     await fetchTasks();
     closeForm();
   };
+
+  // ✅ Generamos las listas únicas dinámicas para los filtros
+  const taskLists = Array.from(new Set(tasks.map(task => task.list))).filter(Boolean);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   return (
     <>
@@ -51,8 +82,17 @@ export default function Dashboard() {
         <div className="bg-Background">
           <div className="max-w-5xl mx-auto mt-6 sm:mt-10 p-4 sm:p-6 lg:p-8 bg-gray-50 rounded-xl">
             <div className="overflow-x-auto">
-              <FilterTabs activeFilter={activeFilter} onFilterChange={setActiveFilter} />
-              <TaskTable tasks={tasks} filter={activeFilter} />
+              <FilterTabs
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+                lists={taskLists}
+              />
+              <TaskTable
+                tasks={tasks}
+                filter={activeFilter}
+                onDelete={deleteTask}
+                onEdit={openEditForm}
+              />
             </div>
           </div>
         </div>
@@ -78,6 +118,8 @@ export default function Dashboard() {
               <TaskForm
                 onCancel={closeForm}
                 onCreate={handleTaskCreated}
+                onUpdate={handleTaskUpdated}
+                task={taskToEdit}
               />
             </div>
           </div>

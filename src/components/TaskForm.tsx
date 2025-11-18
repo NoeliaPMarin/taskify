@@ -1,57 +1,79 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "./Button";
 
-export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void; onCreate?: () => void }) {
-  const [title, setTitle] = useState("");
-  const [list, setList] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("In Progress");
-  const [dueDate, setDueDate] = useState("");
+interface TaskFormProps {
+  onCancel?: () => void;
+  onCreate?: () => void;
+  onUpdate?: () => void;
+  task?: {
+    id: number;
+    title: string;
+    list?: string;
+    description?: string;
+    status: string;
+    dueDate: string;
+  };
+}
+
+export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFormProps) {
+  const [title, setTitle] = useState(task?.title || "");
+  const [list, setList] = useState(task?.list || "");
+  const [description, setDescription] = useState(task?.description || "");
+  const [status, setStatus] = useState(task?.status || "In Progress");
+  const [dueDate, setDueDate] = useState(task?.dueDate || "");
+
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title);
+      setList(task.list ?? "");
+      setDescription(task.description ?? "");
+      setStatus(task.status);
+      setDueDate(task.dueDate);
+    }
+  }, [task]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Validación de campos obligatorios
-  if (!title.trim() || !list.trim() || !dueDate.trim()) {
-    alert("Please fill in Title, Task List, and Due Date.");
-    return;
-  }
-
-  const newTask = { title, list, description, status, dueDate };
-
-  try {
-    const res = await fetch("http://localhost:4000/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newTask),
-    });
-
-    if (!res.ok) {
-      const errData = await res.json();
-      console.error("Error creating task:", errData);
+    if (!title.trim() || !list.trim() || !dueDate.trim()) {
+      alert("Please fill in Title, Task List, and Due Date.");
       return;
     }
 
-    if (onCreate) onCreate();
-  } catch (error) {
-    console.error("Fetch error:", error);
-  }
-};
+    const taskData = { title, list, description, status, dueDate };
 
+    try {
+      const res = await fetch(
+        task ? `http://localhost:4000/tasks/${task.id}` : "http://localhost:4000/tasks",
+        {
+          method: task ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(taskData),
+        }
+      );
+
+      if (!res.ok) {
+        const errData = await res.json();
+        console.error("Error saving task:", errData);
+        return;
+      }
+
+      if (task && onUpdate) onUpdate();
+      if (!task && onCreate) onCreate();
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
 
   return (
     <>
-
-      {/* Título */}
-      <h1 className="text-3xl  text-primaryText text-center mb-8 text-[24px] sm:text-[32px] md:text-[36px]">
-        New Task
+      <h1 className="text-3xl text-primaryText text-center mb-8 text-[24px] sm:text-[32px] md:text-[36px]">
+        {task ? "Edit Task" : "New Task"}
       </h1>
 
       <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-4">
         {/* Task Title */}
-        <label htmlFor="title" className="mb-2 font-medium text-primaryText">
-          Task Title
-        </label>
+        <label htmlFor="title" className="mb-2 font-medium text-primaryText">Task Title</label>
         <input
           id="title"
           type="text"
@@ -62,9 +84,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
         />
 
         {/* Task List */}
-        <label htmlFor="list" className="mb-2 font-medium text-primaryText">
-          Task List
-        </label>
+        <label htmlFor="list" className="mb-2 font-medium text-primaryText">Task List</label>
         <input
           id="list"
           type="text"
@@ -75,9 +95,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
         />
 
         {/* Description */}
-        <label htmlFor="description" className="mb-2 font-medium text-primaryText">
-          Description
-        </label>
+        <label htmlFor="description" className="mb-2 font-medium text-primaryText">Description</label>
         <textarea
           id="description"
           value={description}
@@ -88,9 +106,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
         />
 
         {/* Status */}
-        <label htmlFor="status" className="mb-2 font-medium text-primaryText">
-          Status
-        </label>
+        <label htmlFor="status" className="mb-2 font-medium text-primaryText">Status</label>
         <select
           id="status"
           value={status}
@@ -103,9 +119,7 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
         </select>
 
         {/* Due Date */}
-        <label htmlFor="dueDate" className="mb-2 font-medium text-primaryText">
-          Due Date
-        </label>
+        <label htmlFor="dueDate" className="mb-2 font-medium text-primaryText">Due Date</label>
         <input
           id="dueDate"
           type="date"
@@ -117,12 +131,8 @@ export default function TaskForm({ onCancel, onCreate }: { onCancel?: () => void
 
         {/* Buttons */}
         <div className="flex justify-end gap-4 mt-4">
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button variant="primary" type="submit">
-            Create
-          </Button>
+          <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+          <Button variant="primary" type="submit">{task ? "Save" : "Create"}</Button>
         </div>
       </form>
     </>
