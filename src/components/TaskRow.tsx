@@ -1,23 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/solid";
 import StatusTag from "./StatusTag";
+import type { Task } from "../types/task";
 
 interface TaskRowProps {
-    task: {
-        id: number;
-        title: string;
-        status: string;
-        dueDate: string;
-        description?: string;
-    };
+    task: Task;
     onDelete: (id: number) => void;
-    onEdit: (task: {
-        id: number;
-        title: string;
-        status: string;
-        dueDate: string;
-        description?: string;
-    }) => void;
+    onEdit: (task: Task) => void;
 }
 
 export default function TaskRow({ task, onDelete, onEdit }: TaskRowProps) {

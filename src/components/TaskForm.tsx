@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
 import Button from "./Button";
+import { API_URL, authHeaders } from "../lib/api";
+import type { Task } from "../types/task";
 
 interface TaskFormProps {
   onCancel?: () => void;
   onCreate?: () => void;
   onUpdate?: () => void;
-  task?: {
-    id: number;
-    title: string;
-    list?: string;
-    description?: string;
-    status: string;
-    dueDate: string;
-  };
+  task?: Task;
 }
 
 export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFormProps) {
@@ -44,10 +39,10 @@ export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFor
 
     try {
       const res = await fetch(
-        task ? `http://localhost:4000/tasks/${task.id}` : "http://localhost:4000/tasks",
+        task ? `${API_URL}/tasks/${task.id}` : `${API_URL}/tasks`,
         {
           method: task ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...authHeaders() },
           body: JSON.stringify(taskData),
         }
       );

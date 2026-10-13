@@ -17,8 +17,9 @@ export default function Hero() {
         </p>
 
         {/* CTA Button - visible in all screen sizes */}
-        <div className="flex justify-center md:justify-start">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
           <Link to="/signup"><Button variant="primary" className="w-full">Sign Up</Button></Link>
+          <Link to="/login"><Button variant="secondary" className="w-full">Try Demo</Button></Link>
         </div>
       </div>
 

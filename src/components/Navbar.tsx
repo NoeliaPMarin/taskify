@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Button from "./Button";
 import { Link } from "react-router-dom";
@@ -7,9 +7,11 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 interface NavbarProps {
   isLoggedIn?: boolean;
   onAddTaskClick?: () => void;
+  search?: string;
+  onSearchChange?: (value: string) => void;
 }
 
-export default function Navbar({ isLoggedIn = false, onAddTaskClick }: NavbarProps) {
+export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = "", onSearchChange }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -42,6 +44,8 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick }: NavbarPro
         <div className="hidden min-[1180px]:flex items-center ml-auto gap-4">
           <input
             type="text"
+            value={search}
+            onChange={(event) => onSearchChange?.(event.target.value)}
             placeholder="Search..."
             className="border border-secondaryBackground rounded-lg px-4 py-2 w-[340px] lg:w-[491px]"
           />
@@ -78,6 +82,8 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick }: NavbarPro
               <Link to="/tasks" className="text-primaryText font-semibold">Tasks</Link>
               <input
                 type="text"
+                value={search}
+                onChange={(event) => onSearchChange?.(event.target.value)}
                 placeholder="Search..."
                 className="border border-secondaryBackground rounded-lg px-4 py-2 w-full"
               />

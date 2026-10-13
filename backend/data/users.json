@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1791905512651,
+    "name": "Demo User",
+    "email": "demo-1791905512651@taskify.local",
+    "password": "78ffcc9e93d6eb998827e8c8e052d57b:9fb2a8dc7a5e0bc86bf469e8238eed8e7cc19fb86ec3de829e1c95a8578c3b1bcc305c1a6b12ce1c7fd1499b3593fecd07e780d98776ab8f81c94162f7c3928b",
+    "joined": "2026-10-13T15:31:52.703Z"
+  },
+  {
+    "id": 1791921888270,
+    "name": "Demo User",
+    "email": "demo-1791921888270@taskify.local",
+    "password": "7556f0c50c06f5621b4aa111f4fff9b2:b6c564bf193283f74048dde21fe2f826713c2adaae6b5a0c9f018337a14981108cf9fa5481cee45e1ebeb7ccf634be2df96a2e9b366c582d9220cff4bef4a478",
+    "joined": "2026-10-13T20:04:48.318Z"
+  }
+]

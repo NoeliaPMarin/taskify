@@ -1,5 +1,3 @@
-import React from "react";
-
 interface FilterTabsProps {
   activeFilter: string;
   onFilterChange: (filter: string) => void;

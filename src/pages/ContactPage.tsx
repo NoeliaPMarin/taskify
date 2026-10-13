@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useState } from "react";
 import PageHero from "../components/PageHero";
+import { API_URL } from "../lib/api";
 
 
 export default function ContactPage() {
@@ -10,15 +11,21 @@ export default function ContactPage() {
         email: "",
         message: "",
     });
+    const [status, setStatus] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        //TODO: add form submission logic here
-        alert("Message sent! ✨ (Aquí puedes conectar tu backend después)");
+        setStatus("Sending…");
+        try {
+            const response = await fetch(`${API_URL}/contact`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Unable to send message");
+            setFormData({ name: "", email: "", message: "" }); setStatus("Message sent successfully.");
+        } catch (error) { setStatus(error instanceof Error ? error.message : "Unable to send message"); }
     };
 
     return (
@@ -78,6 +85,7 @@ export default function ContactPage() {
                         >
                             Send Message
                         </button>
+                        {status && <p role="status" className="text-center text-primaryText">{status}</p>}
 
                     </form>
                 </div>

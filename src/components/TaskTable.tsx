@@ -1,14 +1,5 @@
-import React from "react";
 import TaskRow from "./TaskRow";
-
-interface Task {
-  id: number;
-  title: string;
-  list: string;
-  description?: string;
-  status: string;
-  dueDate: string;
-}
+import type { Task } from "../types/task";
 
 interface TaskTableProps {
   tasks: Task[];

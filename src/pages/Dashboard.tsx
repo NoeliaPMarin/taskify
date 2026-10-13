@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FilterTabs from "../components/FilterTabs";
 import TaskTable from "../components/TaskTable";
 import TaskForm from "../components/TaskForm";
+import { API_URL, authHeaders } from "../lib/api";
+import type { Task } from "../types/task";
 
 export default function Dashboard() {
-  type Task = { id: number; title: string; list: string; description?: string; status: string; dueDate: string };
-
-  const [isLoggedIn] = useState(true);
+  const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export default function Dashboard() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch("http://localhost:4000/tasks");
+      const res = await fetch(`${API_URL}/tasks`, { headers: authHeaders() });
       if (!res.ok) throw new Error("Error fetching tasks");
       const data = await res.json();
       setTasks(data);
@@ -47,8 +47,9 @@ export default function Dashboard() {
 
   const deleteTask = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:4000/tasks/${id}`, {
+      const res = await fetch(`${API_URL}/tasks/${id}`, {
         method: "DELETE",
+        headers: authHeaders(),
       });
       if (!res.ok) return console.error("Error deleting task");
       fetchTasks();
@@ -77,7 +78,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} onAddTaskClick={openForm} />
+      <Navbar isLoggedIn onAddTaskClick={openForm} search={search} onSearchChange={setSearch} />
       <main className="flex flex-col pb-14 bg-secondaryBackground">
         <div className="bg-Background">
           <div className="max-w-5xl mx-auto mt-6 sm:mt-10 p-4 sm:p-6 lg:p-8 bg-gray-50 rounded-xl">
@@ -88,7 +89,7 @@ export default function Dashboard() {
                 lists={taskLists}
               />
               <TaskTable
-                tasks={tasks}
+                tasks={tasks.filter((task) => `${task.title} ${task.list} ${task.description || ""}`.toLowerCase().includes(search.toLowerCase()))}
                 filter={activeFilter}
                 onDelete={deleteTask}
                 onEdit={openEditForm}
