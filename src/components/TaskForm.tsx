@@ -16,6 +16,8 @@ export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFor
   const [description, setDescription] = useState(task?.description || "");
   const [status, setStatus] = useState(task?.status || "In Progress");
   const [dueDate, setDueDate] = useState(task?.dueDate || "");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (task) {
@@ -30,14 +32,16 @@ export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFor
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setError("");
     if (!title.trim() || !list.trim() || !dueDate.trim()) {
-      alert("Please fill in Title, Task List, and Due Date.");
+      setError("Please complete the title, list and due date.");
       return;
     }
 
     const taskData = { title, list, description, status, dueDate };
 
     try {
+      setSaving(true);
       const res = await fetch(
         task ? `${API_URL}/tasks/${task.id}` : `${API_URL}/tasks`,
         {
@@ -48,21 +52,22 @@ export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFor
       );
 
       if (!res.ok) {
-        const errData = await res.json();
-        console.error("Error saving task:", errData);
-        return;
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Unable to save the task.");
       }
 
       if (task && onUpdate) onUpdate();
       if (!task && onCreate) onCreate();
-    } catch (error) {
-      console.error("Fetch error:", error);
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : "Unable to save the task.");
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <>
-      <h1 className="text-3xl text-primaryText text-center mb-8 text-[24px] sm:text-[32px] md:text-[36px]">
+      <h1 className="text-3xl font-bold text-primaryText text-center mb-8">
         {task ? "Edit Task" : "New Task"}
       </h1>
 
@@ -124,10 +129,11 @@ export default function TaskForm({ onCancel, onCreate, onUpdate, task }: TaskFor
           className="border h-[50px] border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary w-full"
         />
 
-        {/* Buttons */}
+        {error && <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</div>}
+
         <div className="flex justify-end gap-4 mt-4">
-          <Button variant="secondary" onClick={onCancel}>Cancel</Button>
-          <Button variant="primary" type="submit">{task ? "Save" : "Create"}</Button>
+          <Button variant="deactivated" onClick={onCancel} disabled={saving}>Cancel</Button>
+          <Button variant="primary" type="submit" disabled={saving}>{saving ? "Saving…" : task ? "Save changes" : "Create task"}</Button>
         </div>
       </form>
     </>

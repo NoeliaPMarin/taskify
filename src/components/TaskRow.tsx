@@ -31,18 +31,9 @@ export default function TaskRow({ task, onDelete, onEdit }: TaskRowProps) {
                 <td className="text-gray-600">{task.dueDate}</td>
                 <td className="text-center">
                     <div className="flex items-center justify-center gap-3">
-                        <EyeIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => setShowViewModal(true)}
-                        />
-                        <PencilIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => onEdit(task)}
-                        />
-                        <TrashIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => setShowConfirm(true)}
-                        />
+                        <button aria-label={`View ${task.title}`} onClick={() => setShowViewModal(true)}><EyeIcon className="h-5 w-5 text-primary" /></button>
+                        <button aria-label={`Edit ${task.title}`} onClick={() => onEdit(task)}><PencilIcon className="h-5 w-5 text-primary" /></button>
+                        <button aria-label={`Delete ${task.title}`} onClick={() => setShowConfirm(true)}><TrashIcon className="h-5 w-5 text-red-600" /></button>
                     </div>
                 </td>
             </tr>
@@ -52,18 +43,9 @@ export default function TaskRow({ task, onDelete, onEdit }: TaskRowProps) {
                 <div className="flex justify-between items-start mb-2">
                     <h3 className="font-semibold text-primaryText">{task.title}</h3>
                     <div className="flex items-center gap-2">
-                        <EyeIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => setShowViewModal(true)}
-                        />
-                        <PencilIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => onEdit(task)}
-                        />
-                        <TrashIcon
-                            className="h-5 w-5 text-primary cursor-pointer"
-                            onClick={() => setShowConfirm(true)}
-                        />
+                        <button aria-label={`View ${task.title}`} onClick={() => setShowViewModal(true)}><EyeIcon className="h-5 w-5 text-primary" /></button>
+                        <button aria-label={`Edit ${task.title}`} onClick={() => onEdit(task)}><PencilIcon className="h-5 w-5 text-primary" /></button>
+                        <button aria-label={`Delete ${task.title}`} onClick={() => setShowConfirm(true)}><TrashIcon className="h-5 w-5 text-red-600" /></button>
                     </div>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -76,7 +58,8 @@ export default function TaskRow({ task, onDelete, onEdit }: TaskRowProps) {
             {showConfirm && (
                 <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs text-center">
-                        <p className="mb-4">Are you sure you want to delete this task?</p>
+                        <h2 className="mb-2 text-lg font-bold text-primaryText">Delete task?</h2>
+                        <p className="mb-4 text-secondaryText">This will permanently delete “{task.title}”.</p>
                         <div className="flex justify-center gap-4">
                             <button
                                 onClick={() => {
@@ -85,13 +68,13 @@ export default function TaskRow({ task, onDelete, onEdit }: TaskRowProps) {
                                 }}
                                 className="px-4 py-2 bg-accent text-white rounded hover:bg-[#d97706]"
                             >
-                                Yes
+                                Delete
                             </button>
                             <button
                                 onClick={() => setShowConfirm(false)}
                                 className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                             >
-                                No
+                                Cancel
                             </button>
                         </div>
                     </div>

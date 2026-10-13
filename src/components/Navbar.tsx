@@ -3,6 +3,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "../context/AuthContext";
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -13,6 +14,8 @@ interface NavbarProps {
 
 export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = "", onSearchChange }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  const hasSession = Boolean(user);
 
   return (
     <nav className="h-20 bg-tertiary shadow-primaryShadow px-6 flex items-center justify-between">
@@ -23,7 +26,7 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = ""
           <img src="/images/logo.svg" alt="Taskify Logo" className="h-12 w-40 m-4" />
         </Link>
 
-        {!isLoggedIn ? (
+        {!isLoggedIn && !hasSession ? (
           <ul className="hidden min-[1180px]:flex gap-10 text-primaryText font-semibold text-[18px] leading-[20px]">
             <li><Link to={"/features"}>Features</Link></li>
             <li><Link to="/pricing">Pricing</Link></li>
@@ -54,6 +57,13 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = ""
             <UserCircleIcon className="h-full w-full text-primary" />
           </Link>
         </div>
+      ) : hasSession ? (
+        <div className="hidden min-[1180px]:flex items-center ml-auto gap-4">
+          <Link to="/tasks"><Button variant="primary">Open dashboard</Button></Link>
+          <Link to="/profile" className="h-[48px] w-[48px] flex-shrink-0" aria-label="Open profile">
+            <UserCircleIcon className="h-full w-full text-primary" />
+          </Link>
+        </div>
       ) : (
         <div className="hidden min-[1180px]:flex items-center ml-auto gap-4">
           <Link to="/login" className="text-primaryText font-semibold hover:text-primary">Log In</Link>
@@ -69,15 +79,7 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = ""
       {/* Mobile Menu */}
       {isOpen && (
         <div className="absolute top-20 left-0 w-full bg-tertiary shadow-lg p-6 flex flex-col gap-4 min-[1180px]:hidden z-50">
-          {!isLoggedIn ? (
-            <>
-              <Link to="/features">Features</Link>
-              <Link to="/pricing">Pricing</Link>
-              <Link to="/contact">Contact</Link>
-              <Link to="/login"><Button variant="primary" className="w-full">Log In</Button></Link>
-              <Link to="/signup"><Button variant="secondary" className="w-full">Sign Up</Button></Link>
-            </>
-          ) : (
+          {isLoggedIn ? (
             <>
               <Link to="/tasks" className="text-primaryText font-semibold">Tasks</Link>
               <input
@@ -91,6 +93,19 @@ export default function Navbar({ isLoggedIn = false, onAddTaskClick, search = ""
               <Link to="/profile" className="flex items-center gap-2 text-primary">
                 <UserCircleIcon className="h-6 w-6" /> Profile
               </Link>
+            </>
+          ) : hasSession ? (
+            <>
+              <Link to="/tasks"><Button variant="primary" className="w-full">Open dashboard</Button></Link>
+              <Link to="/profile" className="flex items-center gap-2 text-primary"><UserCircleIcon className="h-6 w-6" /> Profile</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/features">Features</Link>
+              <Link to="/pricing">Pricing</Link>
+              <Link to="/contact">Contact</Link>
+              <Link to="/login"><Button variant="primary" className="w-full">Log In</Button></Link>
+              <Link to="/signup"><Button variant="secondary" className="w-full">Sign Up</Button></Link>
             </>
           )}
         </div>

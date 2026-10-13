@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import process from "node:process";
 import cors from "cors";
 import { createToken, hashPassword, publicUser, requireAuth, verifyPassword } from "./auth.js";
-import { createTask, createUser, deleteTask, findUserByEmail, initializeDatabase, listTasks, saveMessage, updateTask, updateUserName, usesDatabase } from "./db.js";
+import { createTask, createUser, deleteExpiredDemoUsers, deleteTask, findUserByEmail, initializeDatabase, listTasks, saveMessage, updateTask, updateUserName, usesDatabase } from "./db.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -16,6 +16,19 @@ const configuredOrigins = process.env.CORS_ORIGIN
 
 app.use(cors({ origin: configuredOrigins?.length ? configuredOrigins : true }));
 app.use(express.json({ limit: "100kb" }));
+
+const authAttempts = new Map();
+function authRateLimit(req, res, next) {
+  const key = req.ip || "unknown";
+  const now = Date.now();
+  const recent = (authAttempts.get(key) || []).filter((timestamp) => now - timestamp < 15 * 60 * 1000);
+  if (recent.length >= 30) return res.status(429).json({ error: "Too many attempts. Please wait a few minutes and try again." });
+  recent.push(now);
+  authAttempts.set(key, recent);
+  next();
+}
+
+app.use("/auth", authRateLimit);
 
 function validateTask(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
@@ -96,10 +109,6 @@ app.put("/auth/me", requireAuth, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
-
-app.post("/auth/forgot-password", (_req, res) => {
-  res.json({ message: "If the account exists, password reset instructions will be sent." });
 });
 
 app.post("/contact", async (req, res, next) => {
@@ -188,5 +197,10 @@ app.use((error, _req, res, next) => {
 });
 
 initializeDatabase()
-  .then(() => app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT} (${usesDatabase ? "PostgreSQL" : "local JSON"})`)))
+  .then(async () => {
+    const deleted = await deleteExpiredDemoUsers();
+    if (deleted) console.log(`Removed ${deleted} expired demo account(s)`);
+    setInterval(() => deleteExpiredDemoUsers().catch((error) => console.error("Demo cleanup failed", error)), 6 * 60 * 60 * 1000).unref();
+    app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT} (${usesDatabase ? "PostgreSQL" : "local JSON"})`));
+  })
   .catch((error) => { console.error("Database initialization failed", error); process.exit(1); });

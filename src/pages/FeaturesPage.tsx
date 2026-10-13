@@ -1,9 +1,13 @@
-import { ViewColumnsIcon, AdjustmentsVerticalIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import { ViewColumnsIcon, AdjustmentsVerticalIcon, ShieldCheckIcon } from "@heroicons/react/24/solid";
+import { Link, Navigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
+import { useAuth } from "../context/AuthContext";
 
 export default function FeaturesPage() {
+    const { user, loading } = useAuth();
+    if (!loading && user) return <Navigate to="/tasks" replace />;
     return (
         <>
             <Navbar />
@@ -11,7 +15,7 @@ export default function FeaturesPage() {
             {/* Hero Section */}
             <PageHero
                 title="Powerful features for productive work"
-                subtitle="Taskify helps you stay organized, collaborate seamlessly, and focus on what matters most."
+                subtitle="Taskify helps you organise your personal workload and focus on what matters most."
             />
 
             {/* Feature Cards */}
@@ -34,20 +38,20 @@ export default function FeaturesPage() {
                         <div className="flex items-center justify-center rounded-full bg-accent w-[108px] h-[108px]">
                             <AdjustmentsVerticalIcon className="h-[55px] w-[55px] text-white" />
                         </div>
-                        <h3 className="h3 text-primaryText">Best Time Collaboration</h3>
+                        <h3 className="h3 text-primaryText">Flexible Workflows</h3>
                         <p className="caption text-secondaryText">
-                            Work with your team in real time and keep communication flowing.
+                            Group tasks into lists, track status and organise work around due dates.
                         </p>
                     </div>
 
                     {/* Feature Card */}
                     <div className="flex flex-col items-center text-center gap-6 max-w-[322px] mx-auto">
                         <div className="flex items-center justify-center rounded-full bg-accent w-[108px] h-[108px]">
-                            <UserGroupIcon className="h-[55px] w-[55px] text-white" />
+                            <ShieldCheckIcon className="h-[55px] w-[55px] text-white" />
                         </div>
-                        <h3 className="h3 text-primaryText">Smart Prioritization</h3>
+                        <h3 className="h3 text-primaryText">Private Workspace</h3>
                         <p className="caption text-secondaryText">
-                            Set priorities intelligently to focus on what matters most.
+                            Keep every account and its tasks securely separated from other users.
                         </p>
                     </div>
 
@@ -59,12 +63,12 @@ export default function FeaturesPage() {
                 <h2 className="text-3xl font-semibold text-primaryText mb-6">
                     Ready to get more done?
                 </h2>
-                <a
-                    href="/signup"
+                <Link
+                    to="/signup"
                     className="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:opacity-90 transition"
                 >
                     Get Started
-                </a>
+                </Link>
             </section>
 
             <Footer />

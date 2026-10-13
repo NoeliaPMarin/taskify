@@ -60,6 +60,21 @@ export async function updateUserName(id, name) {
   return mapUser(rows[0]);
 }
 
+export async function deleteExpiredDemoUsers(maxAgeHours = 48) {
+  const cutoff = new Date(Date.now() - maxAgeHours * 60 * 60 * 1000);
+  if (!pool) {
+    const users = await readJson("users.json");
+    const expiredIds = new Set(users.filter((user) => user.email.endsWith("@taskify.local") && new Date(user.joined) < cutoff).map((user) => user.id));
+    if (!expiredIds.size) return 0;
+    const tasks = await readJson("tasks.json");
+    await writeJson("users.json", users.filter((user) => !expiredIds.has(user.id)));
+    await writeJson("tasks.json", tasks.filter((task) => !expiredIds.has(task.ownerId)));
+    return expiredIds.size;
+  }
+  const result = await pool.query("DELETE FROM users WHERE email LIKE $1 AND joined < $2", ["%@taskify.local", cutoff]);
+  return result.rowCount || 0;
+}
+
 export async function listTasks(ownerId) {
   if (!pool) return (await readJson("tasks.json")).filter((task) => task.ownerId === ownerId);
   const { rows } = await pool.query("SELECT * FROM tasks WHERE owner_id=$1 ORDER BY id DESC", [ownerId]);

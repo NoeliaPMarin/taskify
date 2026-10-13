@@ -5,7 +5,7 @@ export interface User { id: number; name: string; email: string; joined: string 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
-  authenticate: (token: string, user: User) => void;
+  authenticate: (token: string, user: User, remember?: boolean) => void;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -17,20 +17,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("taskify_token");
+    const token = localStorage.getItem("taskify_token") || sessionStorage.getItem("taskify_token");
     if (!token) { setLoading(false); return; }
     fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((data) => setUser(data.user))
-      .catch(() => localStorage.removeItem("taskify_token"))
+      .catch(() => { localStorage.removeItem("taskify_token"); sessionStorage.removeItem("taskify_token"); })
       .finally(() => setLoading(false));
   }, []);
 
-  const authenticate = (token: string, authenticatedUser: User) => {
-    localStorage.setItem("taskify_token", token);
+  const authenticate = (token: string, authenticatedUser: User, remember = true) => {
+    localStorage.removeItem("taskify_token");
+    sessionStorage.removeItem("taskify_token");
+    (remember ? localStorage : sessionStorage).setItem("taskify_token", token);
     setUser(authenticatedUser);
   };
-  const logout = () => { localStorage.removeItem("taskify_token"); setUser(null); };
+  const logout = () => { localStorage.removeItem("taskify_token"); sessionStorage.removeItem("taskify_token"); setUser(null); };
 
   return <AuthContext.Provider value={{ user, loading, authenticate, logout, updateUser: setUser }}>{children}</AuthContext.Provider>;
 }

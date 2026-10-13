@@ -1,4 +1,4 @@
-import { ViewColumnsIcon, AdjustmentsVerticalIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import { ViewColumnsIcon, AdjustmentsVerticalIcon, ShieldCheckIcon } from "@heroicons/react/24/solid";
 
 export default function Features() {
     return (
@@ -24,21 +24,21 @@ export default function Features() {
                             <AdjustmentsVerticalIcon className="h-full w-full text-white" />
                         </div>
                     </div>
-                    <h3 className="h3 text-primaryText">Best Time Collaboration</h3>
+                    <h3 className="h3 text-primaryText">Flexible Workflows</h3>
                     <p className="caption text-secondaryText">
-                        Work with your team in real time and keep communication flowing.
+                        Group tasks into lists, track progress and stay ahead of due dates.
                     </p>
                 </div>
 
                 <div className="flex flex-col items-center text-center max-w-[322px] gap-6 md:gap-[40px] min-h-[220px]">
                     <div className="flex items-center justify-center rounded-full bg-accent w-[108px] h-[108px]">
                         <div className="h-[55px] w-[55px] text-white">
-                            <UserGroupIcon className="h-full w-full text-white" />
+                            <ShieldCheckIcon className="h-full w-full text-white" />
                         </div>
                     </div>
-                    <h3 className="h3 text-primaryText">Smart Prioritization</h3>
+                    <h3 className="h3 text-primaryText">Private Workspace</h3>
                     <p className="caption text-secondaryText">
-                        Set priorities intelligently to focus on what matters most.
+                        Keep every account and its tasks securely separated from other users.
                     </p>
                 </div>
 

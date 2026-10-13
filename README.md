@@ -1,81 +1,78 @@
 # Taskify
 
-Aplicación de gestión de tareas construida con React, TypeScript, Vite, Tailwind CSS y una API de Express.
+A full-stack personal task manager built to turn plans into finished work. Taskify combines a focused, responsive interface with secure account access, a zero-friction demo and persistent cloud data.
 
-## Requisitos
+**Live app:** [taskify-app-dev.netlify.app](https://taskify-app-dev.netlify.app)
 
-- Node.js 22
-- npm
+**API health:** [taskify-9ruc.onrender.com/health](https://taskify-9ruc.onrender.com/health)
 
-## Desarrollo local
+## Highlights
 
-Instala las dependencias del frontend y del backend:
+- Account registration, sign-in, persistent sessions and protected routes
+- Instant private demo workspace with starter tasks
+- Create, search, filter, sort, edit and delete tasks
+- Dashboard statistics for active, completed and overdue work
+- Responsive layouts, empty states, loading feedback and accessible controls
+- Per-user data isolation in PostgreSQL
+- Automatic cleanup of temporary demo accounts after 48 hours
+- Authentication rate limiting and salted password hashing
+- Editable profile, contact form, legal pages and custom 404 page
+
+## Architecture
+
+| Layer | Technology | Hosting |
+| --- | --- | --- |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS | Netlify |
+| API | Node.js, Express | Render |
+| Database | PostgreSQL | Neon |
+
+The frontend calls a REST API using bearer-token authentication. The API owns validation and data access, while PostgreSQL keeps every user's tasks isolated by owner ID. Local development falls back to JSON files when no database URL is configured.
+
+## Run locally
+
+Requirements: Node.js 22 and npm.
 
 ```bash
 npm install
-cd backend
-npm install
+cd backend && npm install
 ```
 
-Arranca la API desde `backend`:
+Create `.env.local` in the project root:
 
-```bash
-npm start
-```
-
-En otra terminal, desde la raíz del proyecto, arranca el frontend:
-
-```bash
-npm run dev
-```
-
-Por defecto, el frontend estará en `http://localhost:5173` y la API en
-`http://localhost:4000`.
-
-## Variables de entorno
-
-Frontend:
-
-```bash
+```env
 VITE_API_URL=http://localhost:4000
-```
-
-Backend:
-
-```bash
 PORT=4000
 CORS_ORIGIN=http://localhost:5173
 AUTH_SECRET=replace-with-a-long-random-secret
-DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+# DATABASE_URL is optional locally
 ```
 
-`CORS_ORIGIN` admite varios orígenes separados por comas. Si no se define, la
-API acepta el origen de la petición para facilitar el desarrollo local.
-`AUTH_SECRET` se usa para firmar sesiones; Render genera uno automáticamente.
-Si `DATABASE_URL` no está definida se utilizan los archivos JSON locales.
-
-## Funcionalidades
-
-- Registro, inicio de sesión y rutas privadas
-- Acceso inmediato mediante una cuenta demo con tareas de ejemplo
-- Perfil editable y cierre de sesión
-- Creación, búsqueda, edición y eliminación de tareas por usuario
-- Formulario de contacto persistido por la API
-- Páginas de términos, privacidad y página 404
-
-## Comprobaciones
+Start the API from `backend` and the frontend from the project root:
 
 ```bash
-npx tsc --noEmit
+npm start
+npm run dev
+```
+
+The frontend runs at `http://localhost:5173`; the API runs at `http://localhost:4000`.
+
+## Quality checks
+
+```bash
+npm test
 npm run lint
 npm run build
 ```
 
-## Despliegue
+## Deployment
 
-El repositorio incluye `netlify.toml` para el frontend y `render.yaml` para la
-API. En Netlify debes configurar `VITE_API_URL` con la URL pública del servicio
-de Render. En Render debes configurar `CORS_ORIGIN` con el dominio público de
-Netlify y `DATABASE_URL` con la cadena de conexión de Neon. Las tablas se crean
-automáticamente cuando arranca la API. Sin `DATABASE_URL`, el desarrollo local
-continúa usando los archivos de `backend/data`.
+The repository includes `netlify.toml` and `render.yaml`.
+
+- Netlify: set `VITE_API_URL` to the public Render service URL.
+- Render: set `CORS_ORIGIN` to the exact Netlify origin and `DATABASE_URL` to the pooled Neon connection string.
+- Render generates `AUTH_SECRET` automatically when the service is created from the Blueprint.
+- Database tables are created idempotently when the API starts.
+
+## Product decisions
+
+The demo removes signup friction for reviewers while still exercising the same API and database path as a normal account. Demo sessions are temporary and their data is deleted automatically. Features that require an external delivery service, such as password-reset email, are intentionally not presented as functional until a real mail provider is connected.

@@ -12,5 +12,26 @@
     "email": "demo-1791921888270@taskify.local",
     "password": "7556f0c50c06f5621b4aa111f4fff9b2:b6c564bf193283f74048dde21fe2f826713c2adaae6b5a0c9f018337a14981108cf9fa5481cee45e1ebeb7ccf634be2df96a2e9b366c582d9220cff4bef4a478",
     "joined": "2026-10-13T20:04:48.318Z"
+  },
+  {
+    "id": 1791927010333,
+    "name": "Demo User",
+    "email": "demo-1791927010333@taskify.local",
+    "password": "b01ece290032ef251ebcd581d3a40daa:61d1ccec8bf87d3a3a0b3aa1d67d82226b1675c66140505582324a69693f230cfe7845184d78a4d1e9b47ad747b241dd5e0fad04d7980b4431b08da704d1d4cb",
+    "joined": "2026-10-13T21:30:10.394Z"
+  },
+  {
+    "id": 1791927078815,
+    "name": "Demo User",
+    "email": "demo-1791927078815@taskify.local",
+    "password": "b8fd2ce116467019f4da25df2ba2b3fe:e48330814d0decbd9241bf4fc0b1e75dc8e19675886cee93903a16a9c849795c2588a6b5dfd2d7b9e6b9c10e7194fdf2ea2c9fd50d89556e95f8f4a8d3ebc94a",
+    "joined": "2026-10-13T21:31:18.875Z"
+  },
+  {
+    "id": 1791927165797,
+    "name": "Noelia Marin",
+    "email": "noeliapmarin@gmail.com",
+    "password": "60195274272ae6ff40c9dcefaea1472e:bb907af08282461d7294feec6bfbdfd5c45b08353a501ac6e9043cff47a7491086e8b838c902d948af3e4474eaa2a7aa75c7b4dac75016ec8eabf097e9af84aa",
+    "joined": "2026-10-13T21:32:45.846Z"
   }
 ]
