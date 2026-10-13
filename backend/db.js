@@ -8,12 +8,15 @@ const directory = path.join(path.dirname(fileURLToPath(import.meta.url)), "data"
 const pool = process.env.DATABASE_URL
   ? new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })
   : null;
+const schemaPool = process.env.DATABASE_URL_UNPOOLED
+  ? new pg.Pool({ connectionString: process.env.DATABASE_URL_UNPOOLED, ssl: { rejectUnauthorized: false } })
+  : pool;
 
 export const usesDatabase = Boolean(pool);
 
 export async function initializeDatabase() {
   if (!pool) return;
-  await pool.query(`
+  await schemaPool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id BIGINT PRIMARY KEY, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL, joined TIMESTAMPTZ NOT NULL DEFAULT NOW()

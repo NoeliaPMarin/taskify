@@ -12,6 +12,8 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
     "@heroicons/react": "^2.2.0",
+    "@neon/config": "^1.9.1",
+    "@neon/env": "^1.6.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.8.2"
